@@ -6,7 +6,7 @@ A curated index of my featured projects with CARL summaries (Context, Action, Re
 
 - AI Academy — Video → Course generation pipeline
   - Repo: https://github.com/MemoriasDev/ai-academy
-  - Live: <add demo link>
+  - Live: https://ai-academy-rouge.vercel.app/
 
 ---
 
