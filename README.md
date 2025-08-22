@@ -1,4 +1,7 @@
 # MemoriasDev — Portfolio
+## Prepared for Gauntlet AI - Cohort 3 Application 
+### [In-Progress!]
+
 
 A curated index of my featured projects with CARL summaries (Context, Action, Result, Learning).
 
