@@ -1,0 +1,322 @@
+# Piff Resale Assistant - Project Overview
+
+## Overview
+
+Piff Resale Assistant was a comprehensive SaaS platform designed for consignment and resale businesses, providing end-to-end management of inventory, customer relationships, authentication processes, and multi-channel sales operations. Built with a modern tech stack, the platform served as a bridge between traditional consignment stores and modern e-commerce platforms like Shopify, while integrating with specialized marketplaces like StockX.
+
+## Architecture
+
+The platform follows a modern full-stack architecture with clear separation of concerns:
+
+### Backend (API)
+- **Technology**: Node.js with TypeScript
+- **Framework**: Express.js with Apollo GraphQL Server
+- **Database**: PostgreSQL with Knex.js ORM
+- **Authentication**: Firebase Authentication
+- **File Storage**: AWS S3
+- **External Integrations**: Shopify Admin API, StockX API, ShipEngine API, Checkbook.io
+
+### Frontend (React)
+- **Technology**: React with TypeScript
+- **State Management**: Apollo Client for GraphQL state management
+- **Styling**: CSS Modules
+- **Build Tool**: Create React App
+
+### Multi-Tenant Architecture
+The platform is designed as a multi-tenant SaaS application where:
+- Each **Store** represents a tenant with complete data isolation
+- **Super Admins** can manage all stores across the platform
+- **Store Owners** have full control over their individual store
+- **Employees** have permission-based access to store features
+- **Sellers** interact with specific stores to submit items for consignment
+
+## Core Features
+
+### 1. Store Management
+**Location**: `/api/src/dataSources/internalDatabase/store/`
+
+The platform provides comprehensive store management capabilities:
+- **Basic Information**: Store branding, contact details, policies
+- **Multi-location Support**: Integration with Shopify locations for inventory tracking
+- **Employee Management**: Role-based access control with granular permissions
+- **Financial Settings**: Bank account integration via Checkbook.io for automated payouts
+- **Shipping Configuration**: Default shipping settings and carrier integration
+
+### 2. Quote System
+**Location**: `/api/src/resolvers/quote.ts`, `/api/src/dataSources/internalDatabase/quote/`
+
+The quote system is the core workflow for sellers to submit items:
+- **Quote Creation**: Sellers create quotes containing multiple line items
+- **Line Item Management**: Each item has detailed specifications (size, condition, images)
+- **Product Linking**: Items can be linked to existing Shopify products or new custom products
+- **Messaging**: Built-in communication between sellers and store staff
+- **Status Tracking**: Comprehensive status workflow from creation to completion
+
+**Quote Statuses**:
+- `pendingSubmission` - Quote being built by seller
+- `submitted` - Submitted for store review
+- `rejected` - Rejected by store
+- `stale` - No response within configured timeframe
+- `partiallyAccepted` - Some items accepted, others not
+- `accepted` - All items accepted
+
+### 3. Authentication Workflow
+**Location**: `/api/src/resolvers/authentication.ts`
+
+Professional item authentication process with configurable steps:
+- **Intake Pictures**: Required photos based on product type
+- **Confirm Contents**: Verify submitted item details
+- **Validate Details**: Check product information accuracy
+- **Validate Condition**: Assess item condition against standards
+- **Validate Authenticity**: Final authenticity verification
+- **Listing Preparation**: Prepare items for sale or storage
+
+**Configurable Elements**:
+- Product-type specific required images
+- Custom authentication questions
+- Rejection reasons and workflow
+- Email notifications for rejections
+
+### 4. Line Item Lifecycle
+**Location**: `/api/src/generated/apiTypes.ts` (LineItemStatusName enum)
+
+Comprehensive status tracking throughout item lifecycle:
+```
+created → submitted → readyToShip → awaitingDropOff → inTransit → 
+awaitingAuthentication → authenticationStarted → 
+[authenticationAccepted | authenticationRejected] → 
+readyForSale → listed → sold → paid
+```
+
+Alternative flows include return processing and item discarding.
+
+### 5. Consignment Management
+**Location**: `/api/src/resolvers/consignment.ts`
+
+Sophisticated consignment rate calculation and management:
+- **Flexible Rate Structure**: Rates based on brand, product type, condition, and sale price
+- **Mathematical Operators**: Support for different calculation methods
+- **Auto-Discount Rules**: Time-based automatic discounting for stale inventory
+- **Consignment Settings**: Store-wide policies for consignment handling
+
+### 6. Inventory Management
+**Location**: `/api/src/dataSources/shopify/`
+
+Deep integration with Shopify for inventory management:
+- **Product Synchronization**: Real-time sync with Shopify catalog
+- **Variant Management**: Size, condition, and location tracking
+- **Inventory Alerts**: Automated notifications for low stock
+- **Multi-location Support**: Track inventory across physical locations
+
+### 7. Bulk Import System
+**Location**: `/api/src/resolvers/import.ts`
+
+Enterprise-grade bulk import functionality:
+- **CSV Import**: Bulk import of inventory items
+- **Seller Assignment**: Assign multiple items to different sellers
+- **Validation**: Pre-import validation and error handling
+- **Progress Tracking**: Real-time import progress via GraphQL subscriptions
+- **Automatic Payout**: Configure automatic seller payments
+
+### 8. StockX Integration
+**Location**: `/api/src/dataSources/stockx/`
+
+Advanced marketplace integration:
+- **Product Search**: Search StockX catalog for item matching
+- **Market Data**: Real-time pricing and market information
+- **Automated Listing**: Direct listing to StockX marketplace
+- **Portfolio Management**: Track StockX listings and performance
+
+### 9. Shipping Management
+**Location**: `/api/src/dataSources/shipEngine/`
+
+Comprehensive shipping solution via ShipEngine API:
+- **Label Generation**: Create shipping labels for multiple carriers
+- **Rate Shopping**: Compare shipping rates across carriers
+- **Tracking**: Real-time shipment tracking
+- **Return Labels**: Generate return shipping labels
+- **Address Validation**: Validate shipping addresses
+
+### 10. Financial Management
+**Location**: `/api/src/dataSources/checkbook/`
+
+Integrated payment processing:
+- **Automated Payouts**: Scheduled seller payments
+- **Bank Account Verification**: Micro-deposit verification
+- **Payment Sources**: Multiple payout methods (cash, store credit, consignment)
+- **Commission Tracking**: Employee commission calculation and tracking
+
+### 11. Notification System
+**Location**: `/api/src/dataSources/internalDatabase/notification/`
+
+Comprehensive notification framework:
+- **Real-time Notifications**: In-app notifications for key events
+- **Email Integration**: SendGrid integration for email notifications
+- **Role-based Notifications**: Different notifications based on user role
+- **Notification History**: Complete audit trail of notifications
+
+### 12. Permission System
+**Location**: `/api/src/resolvers/guards.ts`
+
+Granular role-based access control:
+- **Super Admin**: Platform-wide administration
+- **Store Owner**: Complete store control
+- **Employee Permissions**: Granular permissions for different functions
+- **Seller Access**: Limited access to own quotes and items
+
+**Key Permissions**:
+- `editQuoteSettings` - Modify quote acceptance criteria
+- `editAuthencationSettings` - Configure authentication workflow
+- `editInventorySettings` - Manage inventory alerts and settings
+- `createItem` - Create new inventory items
+- `editCommisionSettings` - Modify commission rates
+
+## Data Model
+
+### Core Entities
+
+**Site Users**
+- Unified user system across all stores
+- Firebase UID for authentication
+- Role-based access through store associations
+
+**Stores**
+- Multi-tenant isolation
+- Shopify integration credentials
+- Configurable settings and workflows
+
+**Quotes & Line Items**
+- Quote contains multiple line items
+- Each line item represents one product submission
+- Status tracking throughout lifecycle
+
+**Authentication Records**
+- Detailed authentication process tracking
+- Configurable steps and requirements
+- Image and response storage
+
+**Products & Variants**
+- Shopify product synchronization
+- Product condition and size variants
+- Pricing and inventory tracking
+
+## Integration Points
+
+### Shopify Admin API
+- **Products**: Create, update, and sync products
+- **Variants**: Manage product variants and inventory
+- **Orders**: Track sales and fulfillment
+- **Locations**: Multi-location inventory management
+- **Webhooks**: Real-time event notifications
+
+### StockX API
+- **Product Search**: Find matching products in StockX catalog
+- **Market Data**: Retrieve current market pricing
+- **Listings**: Create and manage StockX listings
+
+### Firebase Authentication
+- **User Management**: Create and authenticate users
+- **Phone Authentication**: Phone number verification
+- **Custom Claims**: Role-based access control
+
+### ShipEngine API
+- **Shipping Labels**: Generate labels for multiple carriers
+- **Rate Shopping**: Compare shipping costs
+- **Address Validation**: Validate shipping addresses
+
+### Checkbook.io API
+- **Digital Payments**: Issue digital checks and payments
+- **Bank Account Management**: Verify and manage bank accounts
+- **User Management**: Create and manage payout recipients
+
+## Technology Stack Details
+
+### Backend Dependencies
+- **Apollo Server Express**: GraphQL server implementation
+- **Knex.js**: SQL query builder for PostgreSQL
+- **Firebase Admin SDK**: Server-side Firebase integration
+- **Shopify Admin API**: E-commerce platform integration
+- **AWS SDK**: Cloud storage and services
+- **SendGrid**: Email delivery service
+- **Bottleneck**: Rate limiting for API calls
+- **Dinero.js**: Money handling and currency calculations
+
+### Frontend Dependencies
+- **Apollo Client**: GraphQL client with caching
+- **React Router**: Client-side routing
+- **TypeScript**: Type safety and developer experience
+- **CSS Modules**: Scoped styling
+
+## Development Environment
+
+### API Configuration
+- **Development**: Local PostgreSQL database
+- **Production**: AWS RDS PostgreSQL
+- **Environment Variables**: Separate configs for dev/prod
+- **Docker**: Containerized deployment
+
+### Frontend Configuration  
+- **Development**: Local development server
+- **Production**: Static build deployment
+- **Environment-specific**: API endpoints and configuration
+
+## Key Business Logic
+
+### Payout Calculation
+The platform implements sophisticated payout calculations based on:
+- Product condition and market value
+- Store-specific consignment rates
+- StockX market data integration
+- Custom pricing rules per store
+
+### Authentication Workflow
+Configurable multi-step authentication process ensures item quality:
+- Product-type specific requirements
+- Customizable rejection reasons
+- Automated notifications and communication
+- Integration with listing workflow
+
+### Inventory Management
+Real-time inventory synchronization with Shopify:
+- Multi-location inventory tracking
+- Automated low-stock alerts
+- Product lifecycle management
+- Sales performance tracking
+
+## Security Considerations
+
+### Authentication & Authorization
+- Firebase-based authentication with phone number verification
+- Role-based access control with granular permissions
+- Store-level data isolation in multi-tenant architecture
+- API rate limiting and request validation
+
+### Data Protection
+- Encrypted sensitive data storage
+- Secure file upload and storage via AWS S3
+- Input validation and sanitization
+- SQL injection protection via parameterized queries
+
+## Scalability Features
+
+### Database Design
+- Proper indexing for query performance
+- Connection pooling for concurrent requests
+- Migration system for schema evolution
+
+### API Design
+- GraphQL for efficient data fetching
+- DataLoader pattern for N+1 query prevention
+- Rate limiting for external API integrations
+- Background job processing for heavy operations
+
+### Multi-tenancy
+- Efficient tenant isolation
+- Shared infrastructure with tenant-specific configurations
+- Scalable permission system
+
+## Legacy Status
+
+This codebase represents a comprehensive consignment management platform that was actively developed and maintained. The architecture demonstrates enterprise-level considerations for scalability, security, and maintainability. The platform successfully integrated multiple external services while providing a cohesive user experience for all stakeholder types in the consignment business ecosystem.
+
+The extensive feature set and integrations showcase the complexity of modern SaaS applications and the challenges of building platforms that serve multiple user types with varying needs and permissions within a multi-tenant architecture.
