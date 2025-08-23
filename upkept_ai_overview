@@ -1,0 +1,327 @@
+# ▓▓▓ UPKEPT AI ▓▓▓  - Project Overview
+
+## Executive Summary
+
+**Upkept AI Home Advisor** is a mobile-first, AI-powered property maintenance management platform that enables homeowners to receive personalized maintenance plans through an intelligent chat interface. Users input their property address, receive automated property data from the ATTOM API, complete assessments, and generate customized maintenance task lists that can be managed DIY or assigned to service providers.
+
+## Project Purpose & Vision
+
+### Core Mission
+Transform property maintenance from reactive crisis management to proactive, intelligent care planning through AI-driven insights and comprehensive property data integration.
+
+### Target Market
+- **Primary**: Residential property owners seeking organized maintenance management
+- **Secondary**: Real estate agents managing client properties
+- **Future**: Property inspectors, service providers, and property management companies
+
+### Key Value Propositions
+1. **Instant Property Intelligence**: Automated property data retrieval via ATTOM API
+2. **Personalized Maintenance Plans**: AI-generated task lists based on property characteristics
+3. **Flexible Management**: DIY tracking or professional service provider integration
+4. **Progressive Enhancement**: Continuous data enrichment throughout user journey
+5. **Mobile-First Experience**: Optimized for on-the-go property management
+
+## Technical Architecture
+
+### Technology Stack
+
+#### Frontend
+- **Framework**: React 18.3.1 with TypeScript 5.5.3
+- **Build Tool**: Vite 5.4.19 (optimized for fast development)
+- **UI Library**: Shadcn/ui with Radix UI primitives
+- **Styling**: Tailwind CSS 3.4.11 with custom Upkept theme
+- **State Management**: TanStack React Query 5.56.2
+- **Forms**: React Hook Form 7.53.0 with Zod validation
+- **Routing**: React Router DOM 6.26.2
+
+#### Backend & Infrastructure
+- **Database**: Supabase (PostgreSQL with Row Level Security)
+- **Authentication**: Supabase Auth with magic link system
+- **API Integration**: ATTOM Data API for property information
+- **Deployment**: Vercel (configured for automatic deployments)
+- **Session Management**: Hybrid session/user system for anonymous + authenticated flows
+
+#### Development Tools
+- **Package Management**: npm/Bun
+- **Code Quality**: ESLint 9.9.0, TypeScript ESLint
+- **Version Control**: Git with structured branch strategy
+- **Testing**: Jest + React Testing Library (configured)
+
+### Database Architecture
+
+#### Core Tables (97-column enhanced schema)
+1. **profiles**: User profile management with membership tiers
+2. **properties**: Comprehensive property data with ATTOM integration
+   - Address and location fields (17 columns)
+   - Property classification (11 columns)
+   - Building measurements (6 columns)
+   - Interior features (8 columns)
+   - Construction details (10 columns)
+   - Systems and utilities (9 columns)
+   - Tax and assessment data (7 columns)
+   - Owner information (5 columns)
+3. **questionnaire_responses**: Assessment answers and progress tracking
+4. **migration_logs**: Session-to-user migration tracking
+
+#### Security Model
+- Row Level Security (RLS) policies on all tables
+- Session-based anonymous access
+- Seamless migration to authenticated users
+- Protected routes and actions
+- API key protection and secure storage
+
+## Core Features & Implementation Status
+
+### 1. Property Onboarding Pipeline ✅ (95% Complete)
+
+#### Progressive Enhancement Flow
+```
+Stage 1: Landing → Stage 2: User Edits → Stage 3: Enhancement → Stage 4: Assessment
+```
+
+**Current Implementation**:
+- ✅ Address validation and ATTOM basic profile lookup
+- ✅ User correction capability with data persistence
+- ✅ ATTOM detail enhancement (non-blocking)
+- ✅ Automatic assessment preparation
+- ⚠️ Mobile optimization needed
+- ⚠️ Performance testing required
+
+### 2. Property Assessment System 🔄 (70% Complete)
+
+**Features**:
+- Progressive questionnaire with multiple categories
+- Pre-filled answers from property data
+- Confidence scoring based on data completeness
+- Save/resume functionality
+- Smart question prioritization
+
+**Status**:
+- ✅ Core assessment flow implemented
+- ✅ Data pre-filling from ATTOM
+- ⚠️ Rules engine integration pending
+- ⚠️ Task generation not connected
+
+### 3. Task Management Interface 🔄 (60% Complete)
+
+**Capabilities**:
+- Task list generation from assessments
+- DIY task tracking
+- Service provider assignment
+- Schedule management
+- Progress tracking
+
+**Implementation**:
+- ✅ Basic task CRUD operations
+- ✅ UI components complete
+- ❌ Rules engine not integrated
+- ❌ Service provider marketplace pending
+
+### 4. Chat Interface & AI Features 📋 (Planned)
+
+**Planned Agents**:
+- **Pro Finder**: Local contractor search and recommendations
+- **Task Explainer**: Personalized instructions based on property
+- **Task Builder**: Natural language to structured task conversion
+- **Tool Recommender**: Equipment and supply suggestions
+
+### 5. Authentication & Session Management ✅ (Complete)
+
+**Features**:
+- Magic link authentication
+- Anonymous session support
+- Session-to-user migration
+- Protected routes and actions
+- Persistent session storage
+
+## Project Structure
+
+```
+upkeep-ai-home-plan/
+├── src/                        # Application source code
+│   ├── components/             # React components (organized by feature)
+│   │   ├── agent/             # Agent onboarding components
+│   │   ├── assessment/        # Property assessment flow
+│   │   ├── auth/             # Authentication components
+│   │   ├── chat/             # Chat interface components
+│   │   ├── modals/           # Modal dialogs
+│   │   ├── tasks/            # Task management components
+│   │   └── ui/               # Shadcn/ui base components
+│   ├── services/              # Business logic and API integration
+│   │   ├── attomApi.ts       # ATTOM Data API integration
+│   │   ├── propertyService.ts # Property data management
+│   │   ├── sessionService.ts  # Session management
+│   │   └── authService.ts    # Authentication logic
+│   ├── hooks/                 # Custom React hooks
+│   ├── contexts/              # React context providers
+│   ├── pages/                 # Route components
+│   └── types/                 # TypeScript definitions
+├── supabase/                  # Database configuration
+│   └── migrations/            # SQL migration files
+├── docs/palmer_docs/          # Comprehensive documentation
+│   ├── project-info/         # Project documentation
+│   ├── checklists/           # Phase implementation guides
+│   ├── workflows/            # Development workflows
+│   └── prompts/              # AI assistant prompts
+└── tools/                     # Development utilities
+    ├── testing/              # Test scripts
+    ├── debug/                # Debugging utilities
+    └── data-processing/      # Data manipulation tools
+```
+
+## Development Phases & Roadmap
+
+### Phase 0: Project Setup ✅ (Complete)
+- Environment configuration
+- Database schema implementation
+- Basic authentication setup
+- Development workflow establishment
+
+### Phase 1: Property Onboarding MVP 🔄 (95% Complete)
+**Current Focus**
+- ✅ ATTOM API integration (basic + detail)
+- ✅ Progressive enhancement pipeline
+- ✅ User correction handling
+- ⚠️ End-to-end testing needed
+- ⚠️ Performance optimization required
+
+### Phase 2: Assessment & Rules Engine 📋 (Next Priority)
+**Planned Features**:
+- Complete assessment questionnaire
+- Rules engine for task generation
+- Maintenance schedule creation
+- Cost estimation system
+
+### Phase 3: User Experience Enhancement 📋 (Future)
+**Improvements**:
+- Mobile interface optimization
+- Advanced loading states
+- Address autocomplete
+- Enhanced error handling
+- Accessibility improvements
+
+### Phase 4: Advanced Features 📋 (Future)
+**Expansions**:
+- Service provider marketplace
+- AI chat agents implementation
+- Smart home integration
+- Professional inspection tools
+- Multi-property management
+
+## Current Challenges & Technical Debt
+
+### Immediate Issues
+1. **Testing Coverage**: End-to-end integration tests incomplete
+2. **Mobile Optimization**: Responsive design needs refinement
+3. **Performance**: Multi-user concurrent access untested
+4. **Cache Strategy**: Invalidation logic needs improvement
+
+### Technical Debt
+1. **Code Organization**: Some files exceed 250-line AI-first recommendation
+2. **Documentation**: JSDoc coverage incomplete
+3. **Error Handling**: Inconsistent error messaging
+4. **Type Safety**: Some any types need proper definitions
+
+## Business Model & Monetization
+
+### Revenue Streams (Planned)
+1. **Freemium Model**: Basic features free, premium for advanced
+2. **Service Provider Commissions**: Revenue share on hired services
+3. **Professional Tiers**: Agent and inspector subscription plans
+4. **API Access**: Developer access to property intelligence
+
+### Success Metrics
+- Property onboarding completion rate
+- Assessment completion rate
+- Task creation and completion rates
+- User retention and engagement
+- Service provider conversion rate
+
+## Security & Compliance
+
+### Data Protection
+- Row Level Security on all database tables
+- Encrypted API key storage
+- Session token management
+- Input sanitization and validation
+- CORS policy implementation
+
+### Privacy Considerations
+- Anonymous session support
+- Optional user registration
+- Data retention policies
+- GDPR compliance ready
+- User data export capability
+
+## Development Guidelines
+
+### Code Standards
+- TypeScript strict mode
+- Component-based architecture
+- Separation of concerns
+- Mobile-first responsive design
+- Accessibility (WCAG 2.1 AA target)
+
+### Git Workflow
+- Feature branch strategy
+- Semantic commit messages
+- Pull request reviews
+- Automated testing in CI/CD
+- Protected main branch
+
+### Documentation Requirements
+- JSDoc for all functions
+- Component prop documentation
+- Service method descriptions
+- Database schema comments
+- API endpoint documentation
+
+## Deployment & Infrastructure
+
+### Production Environment
+- **Hosting**: Vercel (automatic deployments)
+- **Database**: Supabase cloud
+- **CDN**: Vercel Edge Network
+- **Monitoring**: Built-in Vercel analytics
+
+### Development Environment
+- Local Supabase instance support
+- Hot module replacement
+- Environment variable management
+- Development proxy configuration
+
+## Future Vision & Expansion
+
+### Short-term Goals (3-6 months)
+1. Complete Phase 2 (Assessment & Rules Engine)
+2. Launch mobile app (React Native)
+3. Implement basic AI chat agents
+4. Service provider beta program
+
+### Long-term Vision (12+ months)
+1. Full service provider marketplace
+2. Smart home device integration
+3. Predictive maintenance AI
+4. Property value optimization tracking
+5. Insurance integration
+6. Multi-language support
+
+## Team & Resources
+
+### Current Status
+- Single repository development
+- Lovable.dev integration for rapid prototyping
+- Open for contributions
+
+### Required Expertise
+- React/TypeScript developers
+- PostgreSQL/Supabase experts
+- UI/UX designers
+- Property maintenance domain experts
+- AI/ML engineers for advanced features
+
+## Conclusion
+
+Upkept AI Home Advisor represents a comprehensive solution for modern property maintenance management. With its progressive enhancement architecture, robust data integration, and user-centric design, it's positioned to transform how homeowners approach property care. The modular architecture and phased development approach ensure sustainable growth while maintaining system stability and user experience quality.
+
+The project is currently transitioning from Phase 1 (Property Onboarding) to Phase 2 (Assessment & Rules Engine), with a solid foundation in place for future expansion into AI-powered features and service provider marketplace functionality.
