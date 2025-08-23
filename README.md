@@ -20,9 +20,13 @@ A curated index of my featured projects with CARL summaries (Context, Action, Re
 
 ## Projects
 
+* **Resale-Assistant** — consignment/resale operations SaaS platform
+  * Repo: Available Upon Request
+  * Overview: https://github.com/MemoriasDev/MemoriasDev/blob/main/resale-assistant-overview (c)
+  * Userflow: https://github.com/MemoriasDev/MemoriasDev/blob/main/resale-assistant-userflow.md (c)
+
 * **Module-Mind** — Open-source video-to-course transformation platform  
   * Repo: https://github.com/MemoriasDev/module-mind-open  
-  * Live: [Demo Coming Soon]  
   * Type: Open Source Template & SaaS Foundation
 
 * **AI Academy** — Video → Course generation pipeline  
