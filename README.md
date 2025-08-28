@@ -38,5 +38,4 @@ A curated index of my featured projects with CARL summaries (Context, Action, Re
   * Live: https://ai-academy-rouge.vercel.app/  
   * Type: Education Technology 
 
-https://github.com/MemoriasDev/snapbids3-open
 ---
